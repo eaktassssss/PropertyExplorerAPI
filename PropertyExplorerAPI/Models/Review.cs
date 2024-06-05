@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 namespace PropertyExplorerAPI.Models
 {
     public class Review
@@ -8,7 +9,7 @@ namespace PropertyExplorerAPI.Models
         public string Id { get; set; }
 
         [BsonElement("date")]
-        public BsonDateTime Date { get; set; }
+        public DateTime Date { get; set; }
 
         [BsonElement("listing_id")]
         public string ListingId { get; set; }

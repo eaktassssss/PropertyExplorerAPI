@@ -1,7 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 namespace PropertyExplorerAPI.Models
 {
-    public class Listing
+    public class Properties
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -59,16 +60,16 @@ namespace PropertyExplorerAPI.Models
         public string CancellationPolicy { get; set; }
 
         [BsonElement("last_scraped")]
-        public BsonDateTime LastScraped { get; set; }
+        public DateTime LastScraped { get; set; }
 
         [BsonElement("calendar_last_scraped")]
-        public BsonDateTime CalendarLastScraped { get; set; }
+        public DateTime CalendarLastScraped { get; set; }
 
         [BsonElement("first_review")]
-        public BsonDateTime FirstReview { get; set; }
+        public DateTime FirstReview { get; set; }
 
         [BsonElement("last_review")]
-        public BsonDateTime LastReview { get; set; }
+        public DateTime LastReview { get; set; }
 
         [BsonElement("accommodates")]
         public int Accommodates { get; set; }

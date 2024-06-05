@@ -46,4 +46,5 @@ namespace PropertyExplorerAPI.Models
         public List<string> HostVerifications { get; set; }
     }
 
-    
+
+}
