@@ -2,34 +2,44 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using PropertyExplorerAPI.Models;
-using PropertyExplorerAPI.MongoProvider;
+using PropertyExplorerAPI.Wrapper;
 using System.Collections;
 
 namespace PropertyExplorerAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BaseController<T> : ControllerBase
+    public abstract class BaseController<T> : ControllerBase where T : class
     {
-        private readonly MongoConnectionProvider mongoConnectionProvider;
+
         IMongoDatabase database;
         IMongoCollection<T> mongoCollection;
-        string collectionName;
-        public BaseController()
-        {
-                
-        }
+        private string ConnectionString { get; set; }
+        private string DatabaseName { get; set; }
+        private string CollectionName { get; set; }
         public BaseController(IConfiguration configuration,string collectionName)
         {
-            mongoConnectionProvider = new MongoConnectionProvider(configuration.GetSection("MongoConnection:ConnectionString").Value, configuration.GetSection("MongoConnection:Database").Value);
-            database = mongoConnectionProvider.GetDatabase();
-            this.collectionName = collectionName;
+            this.ConnectionString = configuration.GetSection("MongoConnection:ConnectionString").Value;
+            this.DatabaseName = configuration.GetSection("MongoConnection:Database").Value;
+            this.CollectionName = collectionName;
+            database = GetDatabase();
         }
         [NonAction]
         public  IMongoCollection<T> GetCollection()
         {
-            mongoCollection = mongoCollection = database.GetCollection<T>(this.collectionName);
+            mongoCollection = mongoCollection = database.GetCollection<T>(this.CollectionName);
             return mongoCollection;
+        }
+        private IMongoDatabase GetDatabase()
+        {
+            var connection = new MongoClient(ConnectionString);
+            var db = connection.GetDatabase(DatabaseName);
+            return db;
+        }
+
+        //public ResponseWrapper<IEnumerable<T> CreateSuccessResponse(bool success, string message, T data, int statusCode)
+
+        public ResponseWrapper<T> CreateResponse<T>(bool success, string message, T data, int statusCode)
+        {
+            return new ResponseWrapper<T>(success, message, data, statusCode);
         }
     }
 }
